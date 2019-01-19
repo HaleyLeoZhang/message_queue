@@ -14,9 +14,7 @@ trait BaseHandler
             if (preg_match('/--(\w+)=(\w+)/', $arg, $match)) {
                 $key   = $match[1];
                 $value = $match[2];
-                $arr  = [
-                    $key => $value,
-                ];
+                $arr[$key]  = $value;
             } else {
                 echo '有错误参数传入  '. $arg . PHP_EOL;
                 var_dump($argvs);
@@ -114,7 +112,7 @@ trait BaseHandler
 
         $conn->zRemRangeByRank($queue_info['reserved'], 0, $max_index);
         foreach ($jobs as $job) {
-            $job_info = Parse::unpack($job);
+            $job_info = Parser::unpack($job);
             // 重试达到上限
             if ($job_info['attemps'] >= $times) {
                 switch ($when_failed) {
@@ -123,7 +121,7 @@ trait BaseHandler
                         break;
                     case 'retry':
                         $job_info['attemps'] = 0;
-                        $job                 = Parse::pack($job_info);
+                        $job                 = Parser::pack($job_info);
                         $conn->rpush($queue_info['job'], $job);
                         break;
                     case 'abandon':
@@ -136,7 +134,7 @@ trait BaseHandler
             }
             // 重新插入队列
             $job_info['attemps']++;
-            $job = Parse::pack($job_info);
+            $job = Parser::pack($job_info);
             $conn->rpush($queue_info['job'], $job);
         }
         Log::debug('4.处理延迟数据，推送到 job 队列.数量.' . $jobs_len);
