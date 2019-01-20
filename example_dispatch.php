@@ -10,9 +10,10 @@ function example()
     $info = [
         'id'   => 1,
         'name' => 'HaleyLeoZhang',
+        'time' => time(),
     ];
     $job = new EchoLogJob(json_encode($info));
-    $job->set_delay(10);
+    $job->set_delay(3);
     $job->push_queue(EchoLogJob::QUEUE_NAME);
 }
 

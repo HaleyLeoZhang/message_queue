@@ -28,8 +28,6 @@ abstract class Dispatch
      */
     public function push_queue($queue_name = 'default')
     {
-        Log::info('serialize  ' . serialize($this));
-
         $queue_info = Config::get_queue_name($queue_name);
         $config     = Config::get_config();
         extract($config);
