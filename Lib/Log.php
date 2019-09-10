@@ -132,7 +132,7 @@ class Log
         }
         // 写入 UUID
         if( self::$_ini['uuid']  ){
-            $info = $str . ' '. self::get_uuid(). ' ' . $name . $info . $data_str. "\n";
+            $info = $str . ' '. Token::uuid(). ' ' . $name . $info . $data_str. "\n";
         }else{
             $info = $str . $name . $info . $data_str. "\n";
         }
@@ -189,58 +189,6 @@ class Log
         return $file_path;
     }
 
-    /**
-     * 生成 UUID
-     * @return string
-     */
-    protected static function get_uuid()
-    {
-        if( '' == self::$log_uuid ){
-            // 8-4-4-4-12
-            $str_arr = [];
-            $str_arr[] = self::rand_str(8);
-            $str_arr[] = self::rand_str(4);
-            $str_arr[] = self::rand_str(4);
-            $str_arr[] = self::rand_str(4);
-            $str_arr[] = self::rand_str(12);
-            $str = implode($str_arr, '-');
-            $str = strtoupper($str);
-            self::$log_uuid = $str;
-            unset($str_arr);
-            unset($str);
-        }
-        return self::$log_uuid;
-    }
-
-    /**
-     * 随机生成固定长度的随机数
-     * @param string  len  截取长度，默认八位
-     * @param Int     type 返回类型 [general=>字母+数字,number=>纯数字,mix=>字母+数字+特殊符号,string=>大小写字母]
-     * @return string
-     */
-    public static function rand_str($len = 8, $type = 'general')
-    {
-        $general = '0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
-        $number  = '0123456789';
-        $mix     = '0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM!@#$%^&*()_+[],./<>?;';
-        $string  = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
-
-        $str = $$type; // 取出目标类型
-
-        // - 长度不够，则拼接类型
-        $str_len = count($str);
-        if ($str_len < $len) {
-            $target   = '';
-            $loop_len = ceil($len / $str_len);
-            for ($i = 0; $i < $loop_len; $i++) {
-                $target .= $str;
-            }
-        } else {
-            $target = $str;
-        }
-
-        return substr(str_shuffle($target), 0, $len);
-    }
 
     //+++++++++++++++++++++++++++++++++++
     //      配色方案
