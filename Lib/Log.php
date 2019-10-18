@@ -132,12 +132,21 @@ class Log
         }
         // 写入 UUID
         if( self::$_ini['uuid']  ){
-            $info = $str . ' '. Token::uuid(). ' ' . $name . $info . $data_str. "\n";
+            $info = $str . ' '. self::get_uuid(). ' ' . $name . $info . $data_str. "\n";
         }else{
             $info = $str . $name . $info . $data_str. "\n";
         }
         $str  = self::getColoredString($info, $color);
         self::write($str);
+    }
+
+    protected static function get_uuid()
+    {
+        static $uuid = null;
+        if (null === $uuid) {
+            $uuid = Token::uuid();
+        }
+        return $uuid;
     }
 
     /**
